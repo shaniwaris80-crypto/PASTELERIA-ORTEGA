@@ -113,6 +113,7 @@ td input,td select{width:100%;padding:7px}
   <div class="top-actions">
     <span class="cashierBar">Cajero: <b id="cashierName">—</b></span>
     <button class="secondary hideMobile" onclick="showTab('sales')">Ventas</button>
+    <button class="ok" onclick="openAddProductModal()">+ Añadir producto</button>
     <button class="secondary hideMobile" onclick="showTab('history')">Historial</button>
     <button class="secondary hideMobile" onclick="showTab('cash')">Arqueo</button>
     <button class="secondary hideMobile" onclick="showTab('products')">Productos/Stock</button>
@@ -128,6 +129,7 @@ td input,td select{width:100%;padding:7px}
       <h2>Venta táctil</h2>
       <div class="toolbar">
         <input id="searchInput" class="search" placeholder="Buscar producto..." oninput="renderProducts()">
+        <button class="ok" onclick="openAddProductModal()">+ Añadir producto</button>
         <button class="ghost" onclick="openQuickProduct()">+ Producto rápido</button>
       </div>
       <div id="categoryPills" class="category-row"></div>
@@ -173,6 +175,10 @@ td input,td select{width:100%;padding:7px}
 
     <div id="products" class="tab-content">
       <h2>Productos y stock</h2>
+      <div class="toolbar">
+        <button class="ok" onclick="openAddProductModal()">+ Añadir producto nuevo</button>
+        <span class="muted">También puedes editar precios y stock en la tabla.</span>
+      </div>
       <div class="form-grid">
         <label>Nombre<input id="newName" placeholder="Ej: Croissant"></label>
         <label>Precio €<input id="newPrice" type="number" step="0.01" min="0" placeholder="1.50"></label>
@@ -283,6 +289,7 @@ td input,td select{width:100%;padding:7px}
   <button onclick="showTab('sales');scrollTop()">Venta</button>
   <button onclick="scrollCart()">Ticket</button>
   <button onclick="showTab('history');scrollTop()">Historial</button>
+  <button onclick="openAddProductModal()">+ Producto</button>
   <button onclick="showTab('cash');scrollTop()">Arqueo</button>
   <button onclick="showTab('settings');scrollTop()">Ajustes</button>
 </nav>
@@ -339,6 +346,50 @@ td input,td select{width:100%;padding:7px}
       <button class="ghost" onclick="closeRefundModal()">Cancelar</button>
       <button class="warning" onclick="confirmPartialRefund()">Registrar devolución parcial</button>
       <button class="danger" onclick="cancelFullTicketFromModal()">Anular ticket completo</button>
+    </div>
+  </div>
+</div>
+
+
+<div id="addProductModal" class="modal no-print">
+  <div class="modal-card">
+    <h2>Añadir producto nuevo</h2>
+    <p class="muted">Este producto quedará guardado en el TPV de este navegador.</p>
+
+    <div class="settings-grid">
+      <label>Nombre del producto
+        <input id="modalNewName" placeholder="Ej: Café con leche">
+      </label>
+      <label>Precio €
+        <input id="modalNewPrice" type="number" step="0.01" min="0" placeholder="1.50">
+      </label>
+      <label>Categoría
+        <input id="modalNewCategory" list="categoryList" placeholder="Ej: Bebidas">
+        <datalist id="categoryList"></datalist>
+      </label>
+      <label>Tipo de venta
+        <select id="modalNewUnit">
+          <option value="ud">Unidad</option>
+          <option value="kg">Kilo</option>
+        </select>
+      </label>
+      <label>Controlar stock
+        <select id="modalStockEnabled" onchange="toggleModalStock()">
+          <option value="false">No</option>
+          <option value="true">Sí</option>
+        </select>
+      </label>
+      <label>Stock inicial
+        <input id="modalNewStock" type="number" step="0.001" placeholder="Opcional" disabled>
+      </label>
+      <label>Stock mínimo aviso
+        <input id="modalNewMinStock" type="number" step="0.001" placeholder="Opcional" disabled>
+      </label>
+    </div>
+
+    <div class="toolbar" style="justify-content:flex-end;margin-top:14px;margin-bottom:0">
+      <button class="ghost" onclick="closeAddProductModal()">Cancelar</button>
+      <button class="ok" onclick="addProductFromModal()">Guardar producto</button>
     </div>
   </div>
 </div>
@@ -1905,10 +1956,65 @@ function center(text,width){ text=String(text); if(text.length>=width)return tex
 function escapeHtml(str){ return String(str).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])); }
 function escapeAttr(str){ return escapeHtml(str).replace(/"/g,"&quot;"); }
 function escapeJs(str){ return String(str).replace(/\\/g,"\\\\").replace(/'/g,"\\'").replace(/\n/g,""); }
+
+function openAddProductModal(){
+  const list=document.getElementById("categoryList");
+  if(list) list.innerHTML = categories().map(c=>`<option value="${escapeAttr(c)}"></option>`).join("");
+  document.getElementById("modalNewName").value="";
+  document.getElementById("modalNewPrice").value="";
+  document.getElementById("modalNewCategory").value=currentCategory || "";
+  document.getElementById("modalNewUnit").value="ud";
+  document.getElementById("modalStockEnabled").value="false";
+  document.getElementById("modalNewStock").value="";
+  document.getElementById("modalNewMinStock").value="";
+  toggleModalStock();
+  document.getElementById("addProductModal").classList.add("open");
+  setTimeout(()=>document.getElementById("modalNewName").focus(),50);
+}
+function closeAddProductModal(){
+  const modal=document.getElementById("addProductModal");
+  if(modal) modal.classList.remove("open");
+}
+function toggleModalStock(){
+  const enabled=document.getElementById("modalStockEnabled").value==="true";
+  document.getElementById("modalNewStock").disabled=!enabled;
+  document.getElementById("modalNewMinStock").disabled=!enabled;
+}
+function addProductFromModal(){
+  const name=document.getElementById("modalNewName").value.trim();
+  const price=parseFloat(document.getElementById("modalNewPrice").value);
+  const category=document.getElementById("modalNewCategory").value.trim() || "Sin categoría";
+  const unit=document.getElementById("modalNewUnit").value;
+  const stockEnabled=document.getElementById("modalStockEnabled").value==="true";
+  const stock=stockEnabled ? document.getElementById("modalNewStock").value : "";
+  const minStock=stockEnabled ? document.getElementById("modalNewMinStock").value : "";
+  if(!name || isNaN(price) || price<0){
+    alert("Pon nombre y precio correcto.");
+    return;
+  }
+  state.products.push({
+    id:crypto.randomUUID(),
+    name,
+    price,
+    category,
+    unit,
+    stockEnabled,
+    stock,
+    minStock
+  });
+  save();
+  closeAddProductModal();
+  currentCategory=category;
+  renderAll();
+  renderProductTable();
+  alert("Producto añadido: " + name);
+}
+
 document.addEventListener("keydown",e=>{
-  if(e.key==="Escape"){ closeWeightModal(); closeQuickProduct(); closeRefundModal(); }
+  if(e.key==="Escape"){ closeWeightModal(); closeQuickProduct(); closeRefundModal(); closeAddProductModal(); }
   if(e.key==="Enter" && document.getElementById("weightModal").classList.contains("open")) confirmWeight();
   if(e.key==="Enter" && document.getElementById("pinScreen").style.display==="flex") login();
+  if(e.key==="Enter" && document.getElementById("addProductModal").classList.contains("open")) addProductFromModal();
 });
 load();
 </script>
