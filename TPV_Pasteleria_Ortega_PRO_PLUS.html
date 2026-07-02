@@ -1,0 +1,1916 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TPV PRO+ Pastelería Ortega</title>
+<style>
+:root{
+  --bg:#fff7ed; --card:#fff; --ink:#21150f; --muted:#7b6254;
+  --line:#ead8c6; --brand:#8a4b2f; --brand2:#c47b48;
+  --cream:#fff1de; --ok:#15803d; --danger:#b91c1c; --warn:#b45309;
+  --blue:#1d4ed8; --violet:#7c3aed; --shadow:0 12px 35px rgba(82,45,19,.12);
+  --radius:18px;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;color:var(--ink);
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:radial-gradient(circle at top left,rgba(196,123,72,.20),transparent 30rem),linear-gradient(135deg,#fffaf3,#f3dfcd);
+}
+button,input,select,textarea{font:inherit;border-radius:12px;border:1px solid var(--line)}
+input,select,textarea{padding:10px 12px;background:#fff;color:var(--ink);outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--brand2);box-shadow:0 0 0 3px rgba(196,123,72,.13)}
+button{border:none;padding:10px 13px;cursor:pointer;font-weight:850;color:#fff;background:var(--brand);box-shadow:0 4px 14px rgba(138,75,47,.18);transition:.12s transform,.12s filter}
+button:active{transform:scale(.98)} button:hover{filter:brightness(.98)}
+button.secondary{background:#fff;color:var(--brand);border:1px solid var(--brand);box-shadow:none}
+button.ghost{background:#fff;color:var(--ink);border:1px solid var(--line);box-shadow:none}
+button.ok{background:var(--ok)} button.danger{background:var(--danger)} button.warning{background:var(--warn)} button.blue{background:var(--blue)} button.violet{background:var(--violet)}
+header{position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;align-items:center;gap:14px;padding:12px 16px;background:rgba(255,248,239,.96);border-bottom:1px solid var(--line);backdrop-filter:blur(10px)}
+.brand{display:flex;gap:12px;align-items:center}
+.logoBox{width:54px;height:54px;border-radius:15px;background:linear-gradient(135deg,#8a4b2f,#d69a64);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:950;font-size:20px;overflow:hidden;flex:0 0 auto}
+.logoBox img{width:100%;height:100%;object-fit:cover}
+.brand h1{font-size:21px;margin:0;letter-spacing:-.02em}.brand p{font-size:13px;margin:2px 0 0;color:var(--muted)}
+.top-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;align-items:center}
+.cashierBar{font-size:13px;color:var(--muted);display:flex;gap:6px;align-items:center}
+main{max-width:1660px;margin:auto;padding:14px;display:grid;grid-template-columns:minmax(0,1.68fr) minmax(390px,.82fr);gap:14px}
+.panel{background:rgba(255,255,255,.92);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:15px}
+.panel h2{margin:0 0 12px;font-size:19px}.tab-content{display:none}.tab-content.active{display:block}
+.toolbar{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-bottom:12px}.search{flex:1;min-width:220px}
+.category-row{display:flex;gap:8px;overflow:auto;padding:2px 0 12px;scrollbar-width:thin}
+.category-pill{white-space:nowrap;background:#fff;color:var(--ink);border:1px solid var(--line);box-shadow:none;padding:9px 12px;font-size:13px}
+.category-pill.active{background:var(--brand);color:#fff;border-color:var(--brand)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:11px}
+.product{background:#fff;border:1px solid var(--line);border-radius:17px;min-height:132px;padding:13px;cursor:pointer;display:flex;flex-direction:column;justify-content:space-between;transition:.12s transform,.12s box-shadow;position:relative}
+.product:hover{transform:translateY(-2px);box-shadow:0 8px 19px rgba(82,45,19,.13)}
+.product .name{font-weight:950;font-size:14px;line-height:1.18}.product .meta{margin-top:6px;font-size:11px;color:var(--muted)}
+.product .bottom{display:flex;justify-content:space-between;gap:8px;align-items:flex-end;margin-top:12px}
+.product .price{font-weight:950;font-size:22px;color:var(--brand);letter-spacing:-.04em}
+.badge{border-radius:999px;padding:4px 7px;font-weight:950;font-size:11px;background:var(--cream);color:#7c3e22;border:1px solid var(--line)}
+.stockBadge{position:absolute;top:8px;right:8px;font-size:10px;padding:3px 6px;border-radius:999px;background:#f8fafc;border:1px solid #e2e8f0;color:#475569;font-weight:800}
+.low{background:#fff7ed!important;color:#b45309!important;border-color:#fed7aa!important}.out{background:#fee2e2!important;color:#b91c1c!important;border-color:#fecaca!important}
+.cart-list{display:flex;flex-direction:column;gap:8px;max-height:39vh;overflow:auto;padding-right:2px}
+.cart-item{background:#fff;border:1px solid var(--line);border-radius:15px;padding:10px;display:grid;grid-template-columns:1fr auto;gap:8px}
+.cart-item strong{font-size:14px}.cart-item small{color:var(--muted)}
+.qty{display:flex;gap:6px;align-items:center;margin-top:8px;flex-wrap:wrap}.qty button{padding:6px 9px;border-radius:10px;box-shadow:none}.qty input{width:78px;padding:7px;text-align:center}
+.remove{background:#fff;color:var(--danger);border:1px solid #fecaca;box-shadow:none;height:36px}
+.totals{margin-top:13px;padding-top:12px;border-top:1px dashed var(--line);display:flex;flex-direction:column;gap:8px}
+.row{display:flex;justify-content:space-between;gap:12px;align-items:center}.row.big{font-size:28px;font-weight:950;letter-spacing:-.045em}
+.paybox{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
+label{display:flex;flex-direction:column;gap:5px;font-size:12px;color:var(--muted);font-weight:750}
+.full{grid-column:1/-1}.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.actions .full{grid-column:1/-1}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:14px;overflow:hidden;font-size:14px}
+th,td{padding:9px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}th{background:#fff2e2;color:#5e341e}
+td input,td select{width:100%;padding:7px}
+.form-grid{display:grid;grid-template-columns:2fr 1fr 1.1fr .85fr .7fr .7fr auto;gap:8px;align-items:end;margin-bottom:12px}
+.settings-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.cardMini{background:#fff;border:1px solid var(--line);border-radius:16px;padding:13px}.cardMini h3{margin:0 0 10px;font-size:16px}
+.muted{color:var(--muted)}.empty{border:1px dashed var(--line);background:#fff;color:var(--muted);text-align:center;border-radius:16px;padding:28px 10px}
+.receipt{font-family:"Courier New",monospace;background:#fff;color:#000;border:1px solid #ddd;border-radius:12px;padding:12px;margin-top:12px;max-height:42vh;overflow:auto;white-space:pre-wrap;font-size:12px}
+.modal{display:none;position:fixed;inset:0;background:rgba(38,25,17,.48);z-index:40;align-items:center;justify-content:center;padding:18px}
+.modal.open{display:flex}.modal-card{width:min(620px,100%);background:#fff;border-radius:22px;box-shadow:0 20px 70px rgba(0,0,0,.28);padding:20px;max-height:92vh;overflow:auto}
+.modal-card h2{margin:0 0 6px}.quick-amounts{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}.quick-amounts button{background:#fff;color:var(--brand);border:1px solid var(--brand);box-shadow:none}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:14px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:15px;padding:12px}.stat span{display:block;color:var(--muted);font-size:12px;font-weight:750}.stat strong{display:block;margin-top:4px;font-size:22px}
+.status{display:inline-block;border-radius:999px;padding:4px 8px;font-size:12px;font-weight:850}
+.status.ok{background:#dcfce7;color:#166534}.status.cancel{background:#fee2e2;color:#991b1b}.status.refund{background:#fef3c7;color:#92400e}
+.pinScreen{position:fixed;inset:0;z-index:100;background:linear-gradient(135deg,#fffaf3,#eed3b9);display:none;align-items:center;justify-content:center;padding:20px}
+.pinCard{width:min(440px,100%);background:#fff;border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);padding:24px;text-align:center}
+.pinCard h1{margin:8px 0 4px}.pinCard p{color:var(--muted)}.pinCard input{font-size:24px;text-align:center;letter-spacing:.15em;width:100%;margin:10px 0}
+.pinPad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.pinPad button{font-size:20px;padding:14px}
+.mobileNav{display:none;position:fixed;bottom:0;left:0;right:0;background:#fff8ef;border-top:1px solid var(--line);z-index:12;padding:8px;gap:8px}.mobileNav button{flex:1;padding:10px 6px;font-size:12px}
+@media(max-width:1030px){header{align-items:flex-start;flex-direction:column}.top-actions{justify-content:flex-start}main{grid-template-columns:1fr;padding-bottom:82px}.cart-list{max-height:34vh}.mobileNav{display:flex}.hideMobile{display:none}}
+@media(max-width:720px){main{padding:9px;padding-bottom:82px}.grid{grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:8px}.product{min-height:118px;padding:11px}.product .price{font-size:20px}.form-grid{grid-template-columns:1fr}.paybox,.actions{grid-template-columns:1fr}.actions .full,.full{grid-column:auto}.quick-amounts{grid-template-columns:repeat(2,1fr)}th,td{font-size:12px;padding:7px}}
+@media print{body *{visibility:hidden}#printArea,#printArea *{visibility:visible}#printArea{position:absolute;left:0;top:0;width:80mm;padding:0;margin:0;font-size:11px}.no-print{display:none!important}}
+</style>
+</head>
+<body>
+<div id="pinScreen" class="pinScreen no-print">
+  <div class="pinCard">
+    <div class="logoBox" style="margin:auto" id="loginLogo">PO</div>
+    <h1>Pastelería Ortega</h1>
+    <p>Selecciona cajero e introduce PIN. Por defecto: <b>1234</b></p>
+    <select id="loginCashier"></select>
+    <input id="pinInput" type="password" inputmode="numeric" placeholder="PIN">
+    <button class="ok" onclick="login()">Entrar</button>
+    <div class="pinPad">
+      <button onclick="pinAdd('1')">1</button><button onclick="pinAdd('2')">2</button><button onclick="pinAdd('3')">3</button>
+      <button onclick="pinAdd('4')">4</button><button onclick="pinAdd('5')">5</button><button onclick="pinAdd('6')">6</button>
+      <button onclick="pinAdd('7')">7</button><button onclick="pinAdd('8')">8</button><button onclick="pinAdd('9')">9</button>
+      <button class="ghost" onclick="pinClear()">Borrar</button><button onclick="pinAdd('0')">0</button><button class="danger" onclick="pinBack()">←</button>
+    </div>
+  </div>
+</div>
+
+<header class="no-print">
+  <div class="brand">
+    <div class="logoBox" id="headerLogo">PO</div>
+    <div>
+      <h1 id="businessTitle">TPV PRO+ · Pastelería Ortega</h1>
+      <p id="businessSubtitle">NIF Z0223015N · Bda. Juan XXIII, 10, Bajo, 09007 Burgos</p>
+    </div>
+  </div>
+  <div class="top-actions">
+    <span class="cashierBar">Cajero: <b id="cashierName">—</b></span>
+    <button class="secondary hideMobile" onclick="showTab('sales')">Ventas</button>
+    <button class="secondary hideMobile" onclick="showTab('history')">Historial</button>
+    <button class="secondary hideMobile" onclick="showTab('cash')">Arqueo</button>
+    <button class="secondary hideMobile" onclick="showTab('products')">Productos/Stock</button>
+    <button class="secondary hideMobile" onclick="showTab('reports')">Caja X/Z</button>
+    <button class="secondary hideMobile" onclick="showTab('settings')">Ajustes</button>
+    <button class="ghost" onclick="logout()">Salir</button>
+  </div>
+</header>
+
+<main class="no-print">
+  <section class="panel" id="leftPanel">
+    <div id="sales" class="tab-content active">
+      <h2>Venta táctil</h2>
+      <div class="toolbar">
+        <input id="searchInput" class="search" placeholder="Buscar producto..." oninput="renderProducts()">
+        <button class="ghost" onclick="openQuickProduct()">+ Producto rápido</button>
+      </div>
+      <div id="categoryPills" class="category-row"></div>
+      <div id="productGrid" class="grid"></div>
+    </div>
+
+    <div id="history" class="tab-content">
+      <h2>Historial de tickets, reimpresión y devoluciones</h2>
+      <div class="toolbar">
+        <input id="historySearch" class="search" placeholder="Buscar por número, cajero, producto..." oninput="renderHistory()">
+        <input id="historyDate" type="date" onchange="renderHistory()">
+        <button class="ghost" onclick="clearHistoryFilters()">Limpiar</button>
+      </div>
+      <div id="historyBox"></div>
+    </div>
+
+    <div id="cash" class="tab-content">
+      <h2>Arqueo de caja</h2>
+      <div class="settings-grid">
+        <div class="cardMini">
+          <h3>Apertura de caja</h3>
+          <label>Fondo inicial €
+            <input id="openingCash" type="number" step="0.01" min="0" placeholder="Ej: 100.00">
+          </label>
+          <label>Observación apertura
+            <input id="openingNote" placeholder="Opcional">
+          </label>
+          <button class="ok" onclick="saveOpeningCash()">Guardar apertura</button>
+        </div>
+        <div class="cardMini">
+          <h3>Arqueo / cierre</h3>
+          <label>Efectivo contado en caja €
+            <input id="countedCash" type="number" step="0.01" min="0" placeholder="Ej: 250.00" oninput="renderCashCount()">
+          </label>
+          <label>Observación cierre
+            <input id="cashCloseNote" placeholder="Opcional">
+          </label>
+          <button class="warning" onclick="saveCashCount()">Guardar arqueo</button>
+        </div>
+      </div>
+      <div id="cashBox" style="margin-top:14px"></div>
+    </div>
+
+    <div id="products" class="tab-content">
+      <h2>Productos y stock</h2>
+      <div class="form-grid">
+        <label>Nombre<input id="newName" placeholder="Ej: Croissant"></label>
+        <label>Precio €<input id="newPrice" type="number" step="0.01" min="0" placeholder="1.50"></label>
+        <label>Categoría<input id="newCategory" placeholder="Bollería"></label>
+        <label>Tipo<select id="newUnit"><option value="ud">Unidad</option><option value="kg">Kilo</option></select></label>
+        <label>Stock<input id="newStock" type="number" step="0.001" placeholder="Opcional"></label>
+        <label>Mínimo<input id="newMinStock" type="number" step="0.001" placeholder="Opcional"></label>
+        <button onclick="addProduct()">Añadir</button>
+      </div>
+      <p class="muted">Activa stock por producto. En ventas se descuenta y en devoluciones/anulaciones se repone automáticamente.</p>
+      <div style="overflow:auto">
+        <table>
+          <thead><tr><th>Producto</th><th>Precio</th><th>Categoría</th><th>Tipo</th><th>Stock</th><th>Mín.</th><th>Activo</th><th>Acción</th></tr></thead>
+          <tbody id="productTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="reports" class="tab-content">
+      <h2>Caja, informe X y cierre Z</h2>
+      <div class="toolbar">
+        <button onclick="renderXReport()">Ver informe X</button>
+        <button class="warning" onclick="closeZ()">Cerrar caja Z</button>
+        <button class="ghost" onclick="printReport()">Imprimir informe</button>
+        <button class="blue" onclick="exportCSV()">Exportar ventas CSV</button>
+      </div>
+      <div id="reportBox"></div>
+    </div>
+
+    <div id="settings" class="tab-content">
+      <h2>Ajustes, cajeros y copia de seguridad</h2>
+      <div class="settings-grid">
+        <div class="cardMini">
+          <h3>Datos del negocio</h3>
+          <label>Nombre<input id="setName"></label>
+          <label>NIF<input id="setNif"></label>
+          <label>Dirección<textarea id="setAddress" rows="3"></textarea></label>
+          <label>IVA incluido %<input id="setIva" type="number" step="0.01"></label>
+          <button onclick="saveBusinessSettings()">Guardar datos</button>
+        </div>
+        <div class="cardMini">
+          <h3>Logo</h3>
+          <p class="muted">Sube un logo. Se guarda solo en este navegador.</p>
+          <input type="file" id="logoFile" accept="image/*" onchange="loadLogoFile(event)">
+          <button class="ghost" onclick="removeLogo()">Quitar logo</button>
+        </div>
+        <div class="cardMini">
+          <h3>Cajeros</h3>
+          <label>Nuevo cajero<input id="newCashierName" placeholder="Nombre"></label>
+          <label>PIN<input id="newCashierPin" placeholder="1234"></label>
+          <button onclick="addCashier()">Añadir cajero</button>
+          <div id="cashierList" style="margin-top:10px"></div>
+        </div>
+        <div class="cardMini">
+          <h3>Numeración</h3>
+          <label>Serie factura simplificada<input id="setSerie" placeholder="FS"></label>
+          <label>Siguiente número<input id="setNextNumber" type="number" min="1"></label>
+          <button onclick="saveNumbering()">Guardar numeración</button>
+        </div>
+        <div class="cardMini">
+          <h3>Copia de seguridad</h3>
+          <p class="muted">Guarda productos, ventas, cierres, stock, cajeros, arqueos y ajustes.</p>
+          <button class="blue" onclick="exportBackup()">Descargar backup JSON</button>
+          <br><br>
+          <input type="file" id="backupFile" accept=".json,application/json">
+          <button class="warning" onclick="importBackup()">Importar backup</button>
+        </div>
+        <div class="cardMini">
+          <h3>Reset</h3>
+          <p class="muted">Cuidado: borra datos guardados en este navegador.</p>
+          <button class="danger" onclick="resetAllData()">Borrar todo</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <aside class="panel" id="cartPanel">
+    <h2>Ticket actual</h2>
+    <div id="cartList" class="cart-list"></div>
+    <div class="totals">
+      <div class="row"><span>Base</span><strong id="subtotal">0,00 €</strong></div>
+      <div class="row"><span>IVA incluido</span><strong id="iva">0,00 €</strong></div>
+      <div class="row big"><span>Total</span><span id="total">0,00 €</span></div>
+    </div>
+    <div class="paybox">
+      <label>Forma de pago
+        <select id="paymentMethod" onchange="updateTotals()">
+          <option value="Efectivo">Efectivo</option>
+          <option value="Tarjeta">Tarjeta</option>
+          <option value="Bizum">Bizum</option>
+          <option value="Mixto">Mixto</option>
+        </select>
+      </label>
+      <label>Recibido €<input id="cashReceived" type="number" step="0.01" min="0" oninput="updateTotals()" placeholder="0.00"></label>
+      <label class="full">Nota del ticket<input id="ticketNote" placeholder="Opcional"></label>
+    </div>
+    <div class="totals"><div class="row"><span>Cambio</span><strong id="changeDue">0,00 €</strong></div></div>
+    <div class="actions">
+      <button class="ok" onclick="completeSale()">Cobrar</button>
+      <button class="ghost" onclick="printCurrentTicket()">Imprimir</button>
+      <button class="danger full" onclick="clearCart()">Vaciar ticket</button>
+    </div>
+    <div id="lastReceipt" class="receipt" style="display:none"></div>
+  </aside>
+</main>
+
+<nav class="mobileNav no-print">
+  <button onclick="showTab('sales');scrollTop()">Venta</button>
+  <button onclick="scrollCart()">Ticket</button>
+  <button onclick="showTab('history');scrollTop()">Historial</button>
+  <button onclick="showTab('cash');scrollTop()">Arqueo</button>
+  <button onclick="showTab('settings');scrollTop()">Ajustes</button>
+</nav>
+
+<section id="printArea"></section>
+
+<div id="weightModal" class="modal no-print">
+  <div class="modal-card">
+    <h2 id="weightTitle">Peso</h2>
+    <p id="weightPrice" class="muted"></p>
+    <label>Peso / cantidad en kg<input id="weightInput" type="number" step="0.001" min="0.001" placeholder="Ej: 0.250"></label>
+    <div class="quick-amounts">
+      <button onclick="setWeight(0.100)">100 g</button><button onclick="setWeight(0.250)">250 g</button>
+      <button onclick="setWeight(0.500)">500 g</button><button onclick="setWeight(1.000)">1 kg</button>
+    </div>
+    <div class="toolbar" style="justify-content:flex-end;margin-bottom:0">
+      <button class="ghost" onclick="closeWeightModal()">Cancelar</button><button onclick="confirmWeight()">Añadir</button>
+    </div>
+  </div>
+</div>
+
+<div id="quickModal" class="modal no-print">
+  <div class="modal-card">
+    <h2>Producto rápido</h2>
+    <p class="muted">Venta puntual sin guardarla en el listado.</p>
+    <div class="form-grid" style="grid-template-columns:1.5fr 1fr .9fr">
+      <label>Nombre<input id="quickName" placeholder="Producto"></label>
+      <label>Precio €<input id="quickPrice" type="number" step="0.01" min="0" placeholder="0.00"></label>
+      <label>Tipo<select id="quickUnit"><option value="ud">Unidad</option><option value="kg">Kilo</option></select></label>
+    </div>
+    <div class="toolbar" style="justify-content:flex-end;margin-bottom:0">
+      <button class="ghost" onclick="closeQuickProduct()">Cancelar</button><button onclick="addQuickToCart()">Añadir</button>
+    </div>
+  </div>
+</div>
+
+<div id="refundModal" class="modal no-print">
+  <div class="modal-card">
+    <h2>Devolución / anulación</h2>
+    <p id="refundTicketInfo" class="muted"></p>
+    <div id="refundItems"></div>
+    <label>Forma de devolución
+      <select id="refundPayment">
+        <option value="Efectivo">Efectivo</option>
+        <option value="Tarjeta">Tarjeta</option>
+        <option value="Bizum">Bizum</option>
+        <option value="Mixto">Mixto</option>
+      </select>
+    </label>
+    <label>Motivo obligatorio
+      <input id="refundReason" placeholder="Ej: error de cobro, producto devuelto...">
+    </label>
+    <div class="toolbar" style="justify-content:flex-end;margin-top:12px;margin-bottom:0">
+      <button class="ghost" onclick="closeRefundModal()">Cancelar</button>
+      <button class="warning" onclick="confirmPartialRefund()">Registrar devolución parcial</button>
+      <button class="danger" onclick="cancelFullTicketFromModal()">Anular ticket completo</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const STORE_KEY = "tpv_pasteleria_ortega_pro_plus_v4";
+const PRELOADED_PRODUCTS = [
+  {
+    "id": "p001",
+    "name": "Pantortilla",
+    "price": 1.6,
+    "category": "Bollería",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p002",
+    "name": "Palmera",
+    "price": 2.2,
+    "category": "Palmeras",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p003",
+    "name": "Palmera chocolate",
+    "price": 2.5,
+    "category": "Palmeras",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p004",
+    "name": "Palmera choco-nata",
+    "price": 2.5,
+    "category": "Palmeras",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p005",
+    "name": "Palmera yema",
+    "price": 2.5,
+    "category": "Palmeras",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p006",
+    "name": "Palmera de coco",
+    "price": 2.5,
+    "category": "Palmeras",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p007",
+    "name": "Pastas mantequilla almendra",
+    "price": 14.0,
+    "category": "Dulces a peso",
+    "unit": "kg",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p008",
+    "name": "Pastas mantequilla doble choco",
+    "price": 14.0,
+    "category": "Dulces a peso",
+    "unit": "kg",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p009",
+    "name": "Palmeritas chocolate",
+    "price": 14.0,
+    "category": "Dulces a peso",
+    "unit": "kg",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p010",
+    "name": "Palmeritas",
+    "price": 14.0,
+    "category": "Dulces a peso",
+    "unit": "kg",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p011",
+    "name": "Palmeritas choco-nata",
+    "price": 14.0,
+    "category": "Dulces a peso",
+    "unit": "kg",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p012",
+    "name": "Pastas de té",
+    "price": 21.5,
+    "category": "Dulces a peso",
+    "unit": "kg",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p013",
+    "name": "Pañuelos chocolate/manzana",
+    "price": 18.0,
+    "category": "Dulces a peso",
+    "unit": "kg",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p014",
+    "name": "Pastelitos pequeños",
+    "price": 18.0,
+    "category": "Dulces a peso",
+    "unit": "kg",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p015",
+    "name": "Pastel unidad",
+    "price": 2.5,
+    "category": "Pasteles",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p016",
+    "name": "Pastel de fruta fresa",
+    "price": 2.5,
+    "category": "Pasteles",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p017",
+    "name": "Pastel de fruta kiwi",
+    "price": 2.5,
+    "category": "Pasteles",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p018",
+    "name": "Pastel pionono",
+    "price": 2.5,
+    "category": "Pasteles",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p019",
+    "name": "Pastel de selva",
+    "price": 2.5,
+    "category": "Pasteles",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p020",
+    "name": "Pastel de bizcocho",
+    "price": 2.99,
+    "category": "Pasteles",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p021",
+    "name": "Pepito",
+    "price": 2.5,
+    "category": "Pasteles",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p022",
+    "name": "Petisos pequeños",
+    "price": 17.0,
+    "category": "Dulces a peso",
+    "unit": "kg",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p023",
+    "name": "Petisos grandes",
+    "price": 4.0,
+    "category": "Pasteles",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p024",
+    "name": "Picos grandes",
+    "price": 5.5,
+    "category": "Pasteles",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p025",
+    "name": "Picos pequeños",
+    "price": 2.5,
+    "category": "Pasteles",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p026",
+    "name": "Polkas almendra",
+    "price": 2.0,
+    "category": "Dulces a peso",
+    "unit": "kg",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p027",
+    "name": "Rosquillas de palo",
+    "price": 2.5,
+    "category": "Dulces a peso",
+    "unit": "kg",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p028",
+    "name": "Ración tarta hojaldre",
+    "price": 2.5,
+    "category": "Tartas y raciones",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p029",
+    "name": "Ración tarta bizcocho",
+    "price": 2.5,
+    "category": "Tartas y raciones",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p030",
+    "name": "Rosquilla frita chocolate",
+    "price": 12.5,
+    "category": "Tartas y raciones",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p031",
+    "name": "Rosquilla frita anís",
+    "price": 13.0,
+    "category": "Tartas y raciones",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p032",
+    "name": "Tarta manzana",
+    "price": 22.0,
+    "category": "Tartas y raciones",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p033",
+    "name": "Tarta queso",
+    "price": 24.0,
+    "category": "Tartas y raciones",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p034",
+    "name": "Tarta números #2",
+    "price": 41.0,
+    "category": "Tartas y raciones",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p035",
+    "name": "Tarta frutas pequeña (6-8)",
+    "price": 18.0,
+    "category": "Tartas y raciones",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p036",
+    "name": "Tarta frutas grande (12-14)",
+    "price": 38.0,
+    "category": "Tartas y raciones",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p037",
+    "name": "Bollos preñados",
+    "price": 2.5,
+    "category": "Salado",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p038",
+    "name": "Bollos preñados pequeños",
+    "price": 1.5,
+    "category": "Salado",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p039",
+    "name": "Croissant vegetal completo",
+    "price": 2.8,
+    "category": "Salado",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p040",
+    "name": "Canapés",
+    "price": 17.2,
+    "category": "Salado",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p041",
+    "name": "Empanada atún",
+    "price": 19.0,
+    "category": "Empanadas a peso",
+    "unit": "kg",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p042",
+    "name": "Empanada chorizo",
+    "price": 19.0,
+    "category": "Empanadas a peso",
+    "unit": "kg",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p043",
+    "name": "Empanada queso",
+    "price": 19.0,
+    "category": "Empanadas a peso",
+    "unit": "kg",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p044",
+    "name": "Empanada bacon y queso",
+    "price": 19.0,
+    "category": "Empanadas a peso",
+    "unit": "kg",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p045",
+    "name": "Empanada carne",
+    "price": 19.0,
+    "category": "Empanadas a peso",
+    "unit": "kg",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p046",
+    "name": "Empanada pollo",
+    "price": 19.0,
+    "category": "Empanadas a peso",
+    "unit": "kg",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p047",
+    "name": "Empanada pulpo",
+    "price": 24.0,
+    "category": "Empanadas a peso",
+    "unit": "kg",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p048",
+    "name": "Empanada vegetal",
+    "price": 32.5,
+    "category": "Empanadas a peso",
+    "unit": "kg",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p049",
+    "name": "Empanada jamón serrano cebolla caramelizada y queso de cabra",
+    "price": 20.5,
+    "category": "Empanadas",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p050",
+    "name": "Empanada cecina cebolla caramelizada y queso de cabra",
+    "price": 24.5,
+    "category": "Empanadas",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p051",
+    "name": "Mini croissant vegetal",
+    "price": 2.0,
+    "category": "Salado",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p052",
+    "name": "Mini boinas",
+    "price": 3.0,
+    "category": "Salado",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p053",
+    "name": "Pizza bacon",
+    "price": 20.0,
+    "category": "Pizzas",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p054",
+    "name": "Pizza jamón york",
+    "price": 22.0,
+    "category": "Pizzas",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p055",
+    "name": "Pizza 4 quesos",
+    "price": 22.0,
+    "category": "Pizzas",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p056",
+    "name": "Pizza chorizo",
+    "price": 22.0,
+    "category": "Pizzas",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p057",
+    "name": "Pizza atún",
+    "price": 22.0,
+    "category": "Pizzas",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p058",
+    "name": "Mini croissant queso",
+    "price": 2.45,
+    "category": "Salado",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p059",
+    "name": "Pionono jamón",
+    "price": 27.0,
+    "category": "Piononos salados",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p060",
+    "name": "Pionono salmón",
+    "price": 32.5,
+    "category": "Piononos salados",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p061",
+    "name": "Pionono cangrejo",
+    "price": 27.0,
+    "category": "Piononos salados",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p062",
+    "name": "Abisinios",
+    "price": 1.8,
+    "category": "Bollería",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p063",
+    "name": "Abisinios redondos",
+    "price": 1.8,
+    "category": "Bollería",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p064",
+    "name": "Bamba",
+    "price": 1.8,
+    "category": "Bollería",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p065",
+    "name": "Bolsa magdalenas",
+    "price": 1.8,
+    "category": "Bollería",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p066",
+    "name": "Brazo gitano",
+    "price": 2.5,
+    "category": "Bollería",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p067",
+    "name": "1/2 brazo gitano",
+    "price": 1.9,
+    "category": "Bollería",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p068",
+    "name": "Bizcocho almendra",
+    "price": 2.4,
+    "category": "Bollería",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p069",
+    "name": "Croissant",
+    "price": 2.5,
+    "category": "Bollería",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p070",
+    "name": "Croissant relleno",
+    "price": 2.5,
+    "category": "Bollería",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p071",
+    "name": "Croissant de mantequilla",
+    "price": 2.4,
+    "category": "Bollería",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p072",
+    "name": "Canutillos",
+    "price": 2.5,
+    "category": "Dulces a peso",
+    "unit": "kg",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p073",
+    "name": "Cocas de manzana",
+    "price": 2.5,
+    "category": "Bollería",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p074",
+    "name": "Cocadas de coco",
+    "price": 2.5,
+    "category": "Dulces a peso",
+    "unit": "kg",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p075",
+    "name": "Dodis chocolate",
+    "price": 3.0,
+    "category": "Bollería",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p076",
+    "name": "Dodis azúcar",
+    "price": 3.0,
+    "category": "Bollería",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p077",
+    "name": "Dodis rellenos",
+    "price": 3.0,
+    "category": "Bollería",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p078",
+    "name": "Herraduras",
+    "price": 2.5,
+    "category": "Bollería",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p079",
+    "name": "Mini bollería rellena",
+    "price": 3.0,
+    "category": "Mini bollería",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p080",
+    "name": "Mini pantortillas",
+    "price": 3.0,
+    "category": "Mini bollería",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p081",
+    "name": "Mini dodis",
+    "price": 3.0,
+    "category": "Mini bollería",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p082",
+    "name": "Mini croissant relleno nata",
+    "price": 3.0,
+    "category": "Mini bollería",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p083",
+    "name": "Mini croissant relleno crema",
+    "price": 3.0,
+    "category": "Mini bollería",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p084",
+    "name": "Mini croissant relleno chocolate",
+    "price": 1.7,
+    "category": "Mini bollería",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p085",
+    "name": "Milhojas",
+    "price": 1.7,
+    "category": "Pastelería",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p086",
+    "name": "Milhojas crema",
+    "price": 3.0,
+    "category": "Pastelería",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p087",
+    "name": "Milhojas nata",
+    "price": 3.0,
+    "category": "Pastelería",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p088",
+    "name": "Napolitana",
+    "price": 1.7,
+    "category": "Bollería",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p089",
+    "name": "Ochos",
+    "price": 1.7,
+    "category": "Bollería",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p090",
+    "name": "Zumo naranja y limón",
+    "price": 3.0,
+    "category": "Bebidas y batidos",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p091",
+    "name": "Za3za3",
+    "price": 5.5,
+    "category": "Bebidas y batidos",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p092",
+    "name": "Batido manzana y plátano",
+    "price": 3.5,
+    "category": "Bebidas y batidos",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  },
+  {
+    "id": "p093",
+    "name": "Batido aguacate",
+    "price": 4.0,
+    "category": "Bebidas y batidos",
+    "unit": "ud",
+    "stockEnabled": false,
+    "stock": "",
+    "minStock": ""
+  }
+];
+let state = null;
+let currentCategory = "";
+let cart = [];
+let pendingWeightProduct = null;
+let lastReceiptText = "";
+let lastReportText = "";
+let currentCashier = null;
+let refundSaleId = null;
+
+function defaultState(){
+  return {
+    business:{name:"Pastelería Ortega",nif:"Z0223015N",address:"Bda. Juan XXIII, 10, Bajo, 09007 Burgos",ivaRate:0.10,logo:"",serie:"FS",nextNumber:1},
+    products: PRELOADED_PRODUCTS.map(p=>({...p})),
+    sales: [],
+    returns: [],
+    zClosures: [],
+    cashiers: [{id:"c001", name:"Administrador", pin:"1234", role:"admin"}],
+    cashSession: {openingCash:0, openingNote:"", openingAt:null, countedCash:null, closeNote:"", countedAt:null}
+  };
+}
+function migrateState(s){
+  const d = defaultState();
+  s.business = s.business || d.business;
+  s.products = s.products || d.products;
+  s.sales = s.sales || [];
+  s.returns = s.returns || [];
+  s.zClosures = s.zClosures || [];
+  s.cashiers = (s.cashiers && s.cashiers.length) ? s.cashiers : d.cashiers;
+  s.cashSession = s.cashSession || d.cashSession;
+  s.products.forEach(p=>{ if(!p.unit)p.unit="ud"; if(p.stockEnabled===undefined)p.stockEnabled=false; });
+  s.sales.forEach(sale=>{ if(!sale.status) sale.status="active"; if(!sale.refundedAmount) sale.refundedAmount=0; });
+  return s;
+}
+function save(){ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }
+function load(){
+  const raw = localStorage.getItem(STORE_KEY);
+  state = raw ? migrateState(JSON.parse(raw)) : defaultState();
+  save();
+  renderLogin();
+  renderBusiness();
+  renderAll();
+  showPinScreen();
+}
+function renderBusiness(){
+  document.getElementById("businessTitle").textContent = "TPV PRO+ · " + state.business.name;
+  document.getElementById("businessSubtitle").textContent = `NIF ${state.business.nif} · ${state.business.address}`;
+  const logoHtml = state.business.logo ? `<img src="${state.business.logo}" alt="Logo">` : "PO";
+  document.getElementById("headerLogo").innerHTML = logoHtml;
+  document.getElementById("loginLogo").innerHTML = logoHtml;
+  document.getElementById("setName").value = state.business.name;
+  document.getElementById("setNif").value = state.business.nif;
+  document.getElementById("setAddress").value = state.business.address;
+  document.getElementById("setIva").value = (state.business.ivaRate*100).toFixed(2);
+  document.getElementById("setSerie").value = state.business.serie || "FS";
+  document.getElementById("setNextNumber").value = state.business.nextNumber || 1;
+}
+function showPinScreen(){ document.getElementById("pinScreen").style.display = "flex"; document.getElementById("pinInput").focus(); }
+function hidePinScreen(){ document.getElementById("pinScreen").style.display = "none"; }
+function renderLogin(){
+  const sel = document.getElementById("loginCashier");
+  sel.innerHTML = state.cashiers.map(c=>`<option value="${c.id}">${escapeHtml(c.name)}</option>`).join("");
+  renderCashierList();
+}
+function pinAdd(n){ document.getElementById("pinInput").value += n; }
+function pinClear(){ document.getElementById("pinInput").value = ""; }
+function pinBack(){ const el=document.getElementById("pinInput"); el.value=el.value.slice(0,-1); }
+function login(){
+  const id = document.getElementById("loginCashier").value;
+  const pin = document.getElementById("pinInput").value;
+  const cashier = state.cashiers.find(c=>c.id===id && c.pin===pin);
+  if(!cashier){ alert("PIN incorrecto."); return; }
+  currentCashier = cashier;
+  document.getElementById("cashierName").textContent = cashier.name;
+  document.getElementById("pinInput").value = "";
+  hidePinScreen();
+}
+function logout(){ currentCashier=null; document.getElementById("cashierName").textContent="—"; showPinScreen(); }
+function showTab(id){
+  document.querySelectorAll(".tab-content").forEach(x=>x.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  if(id==="products") renderProductTable();
+  if(id==="reports") renderXReport();
+  if(id==="history") renderHistory();
+  if(id==="cash") { renderCashInputs(); renderCashCount(); }
+  if(id==="settings"){ renderBusiness(); renderCashierList(); }
+}
+function renderAll(){ renderCategories(); renderProducts(); renderCart(); renderProductTable(); renderCashierList(); renderCashInputs(); }
+function categories(){ return [...new Set(state.products.map(p=>p.category||"Sin categoría"))].sort((a,b)=>a.localeCompare(b,"es")); }
+function renderCategories(){
+  const box=document.getElementById("categoryPills");
+  const cats=categories();
+  box.innerHTML=`<button class="category-pill ${currentCategory===""?"active":""}" onclick="setCategory('')">Todo</button>`+
+    cats.map(c=>`<button class="category-pill ${currentCategory===c?"active":""}" onclick="setCategory('${escapeJs(c)}')">${escapeHtml(c)}</button>`).join("");
+}
+function setCategory(cat){ currentCategory=cat; renderCategories(); renderProducts(); }
+function renderProducts(){
+  const q=document.getElementById("searchInput").value.toLowerCase().trim();
+  const grid=document.getElementById("productGrid");
+  const filtered=state.products.filter(p=>{
+    const hay=`${p.name} ${p.category} ${p.unit}`.toLowerCase();
+    return (!q || hay.includes(q)) && (!currentCategory || p.category===currentCategory);
+  });
+  if(!filtered.length){ grid.innerHTML=`<div class="empty">No hay productos con esa búsqueda.</div>`; return; }
+  grid.innerHTML=filtered.map(p=>{
+    const stockInfo = productStockInfo(p);
+    return `
+      <div class="product" onclick="addProductClick('${p.id}')">
+        ${stockInfo.text ? `<div class="stockBadge ${stockInfo.cls}">${stockInfo.text}</div>` : ""}
+        <div>
+          <div class="name">${escapeHtml(p.name)}</div>
+          <div class="meta">${escapeHtml(p.category||"Sin categoría")}</div>
+        </div>
+        <div class="bottom">
+          <div class="price">${euro(p.price)}</div>
+          <div class="badge">${p.unit==="kg"?"/ kg":"ud"}</div>
+        </div>
+      </div>`;
+  }).join("");
+}
+function productStockInfo(p){
+  if(!p.stockEnabled) return {text:"",cls:""};
+  const st=parseFloat(p.stock);
+  const min=parseFloat(p.minStock);
+  if(isNaN(st)) return {text:"Stock —",cls:""};
+  if(st<=0) return {text:"Sin stock",cls:"out"};
+  if(!isNaN(min) && st<=min) return {text:"Bajo "+fmtQty(st,p.unit),cls:"low"};
+  return {text:fmtQty(st,p.unit),cls:""};
+}
+function fmtQty(q,unit){ return unit==="kg" ? number3(q)+" kg" : number2(q)+" ud"; }
+function renderProductTable(){
+  const tbody=document.getElementById("productTable"); if(!tbody) return;
+  tbody.innerHTML=state.products.map(p=>`
+    <tr>
+      <td><input value="${escapeAttr(p.name)}" onchange="editProduct('${p.id}','name',this.value)"></td>
+      <td><input type="number" step="0.01" min="0" value="${p.price}" onchange="editProduct('${p.id}','price',this.value)"></td>
+      <td><input value="${escapeAttr(p.category||"")}" onchange="editProduct('${p.id}','category',this.value)"></td>
+      <td><select onchange="editProduct('${p.id}','unit',this.value)"><option value="ud" ${p.unit==="ud"?"selected":""}>Unidad</option><option value="kg" ${p.unit==="kg"?"selected":""}>Kilo</option></select></td>
+      <td><input type="number" step="0.001" value="${p.stock ?? ""}" onchange="editProduct('${p.id}','stock',this.value)"></td>
+      <td><input type="number" step="0.001" value="${p.minStock ?? ""}" onchange="editProduct('${p.id}','minStock',this.value)"></td>
+      <td><select onchange="editProduct('${p.id}','stockEnabled',this.value)"><option value="false" ${!p.stockEnabled?"selected":""}>No</option><option value="true" ${p.stockEnabled?"selected":""}>Sí</option></select></td>
+      <td><button class="danger" onclick="deleteProduct('${p.id}')">Borrar</button></td>
+    </tr>`).join("");
+}
+function addProduct(){
+  const name=document.getElementById("newName").value.trim();
+  const price=parseFloat(document.getElementById("newPrice").value);
+  const category=document.getElementById("newCategory").value.trim()||"Sin categoría";
+  const unit=document.getElementById("newUnit").value;
+  const stock=document.getElementById("newStock").value;
+  const minStock=document.getElementById("newMinStock").value;
+  if(!name || isNaN(price) || price<0){ alert("Pon nombre y precio correcto."); return; }
+  state.products.push({id:crypto.randomUUID(),name,price,category,unit,stockEnabled:stock!=="",stock:stock,minStock:minStock});
+  ["newName","newPrice","newCategory","newStock","newMinStock"].forEach(id=>document.getElementById(id).value="");
+  save(); renderAll();
+}
+function editProduct(id,field,value){
+  const p=state.products.find(x=>x.id===id); if(!p) return;
+  if(field==="price"){ const v=parseFloat(value); if(isNaN(v)||v<0){alert("Precio incorrecto.");renderProductTable();return;} p.price=v; }
+  else if(field==="stockEnabled") p.stockEnabled = value==="true";
+  else p[field]=String(value).trim();
+  save(); renderAll();
+}
+function deleteProduct(id){ if(!confirm("¿Borrar este producto?")) return; state.products=state.products.filter(p=>p.id!==id); save(); renderAll(); }
+function addProductClick(id){
+  const p=state.products.find(x=>x.id===id); if(!p) return;
+  if(p.stockEnabled && parseFloat(p.stock)<=0){ alert("Producto sin stock."); return; }
+  if(p.unit==="kg") openWeightModal(p); else addToCart(p,1);
+}
+function openWeightModal(product){
+  pendingWeightProduct=product;
+  document.getElementById("weightTitle").textContent=product.name;
+  document.getElementById("weightPrice").textContent=`Precio: ${euro(product.price)} / kg`;
+  document.getElementById("weightInput").value="";
+  document.getElementById("weightModal").classList.add("open");
+  setTimeout(()=>document.getElementById("weightInput").focus(),50);
+}
+function closeWeightModal(){ pendingWeightProduct=null; document.getElementById("weightModal").classList.remove("open"); }
+function setWeight(v){ document.getElementById("weightInput").value=v.toFixed(3); }
+function confirmWeight(){
+  const qty=parseFloat(document.getElementById("weightInput").value);
+  if(!pendingWeightProduct || isNaN(qty) || qty<=0){ alert("Introduce un peso correcto."); return; }
+  if(pendingWeightProduct.stockEnabled && qty > parseFloat(pendingWeightProduct.stock||0)){ alert("No hay stock suficiente."); return; }
+  addToCart(pendingWeightProduct,qty); closeWeightModal();
+}
+function addToCart(product,qty){
+  const existing=cart.find(x=>x.productId===product.id && x.price===product.price && x.unit===product.unit && product.unit==="ud");
+  if(existing) existing.qty += qty;
+  else cart.push({productId:product.id,name:product.name,price:product.price,qty,unit:product.unit||"ud",category:product.category||"Sin categoría",stockEnabled:!!product.stockEnabled});
+  renderCart();
+}
+function renderCart(){
+  const list=document.getElementById("cartList");
+  if(!cart.length) list.innerHTML=`<div class="empty">Ticket vacío</div>`;
+  else list.innerHTML=cart.map((it,idx)=>`
+    <div class="cart-item">
+      <div>
+        <strong>${escapeHtml(it.name)}</strong><br>
+        <small>${it.unit==="kg"?number3(it.qty)+" kg":number2(it.qty)+" ud"} x ${euro(it.price)} = ${euro(it.price*it.qty)}</small>
+        <div class="qty">
+          <button onclick="changeQty(${idx},${it.unit==="kg"?-0.100:-1})">−</button>
+          <input type="number" step="${it.unit==="kg"?"0.001":"1"}" min="${it.unit==="kg"?"0.001":"1"}" value="${it.unit==="kg"?Number(it.qty).toFixed(3):it.qty}" onchange="setQty(${idx},this.value)">
+          <button onclick="changeQty(${idx},${it.unit==="kg"?0.100:1})">+</button>
+        </div>
+      </div>
+      <button class="remove" onclick="removeFromCart(${idx})">X</button>
+    </div>`).join("");
+  updateTotals();
+}
+function cartTotal(){ return cart.reduce((s,it)=>s+(Number(it.price)||0)*(Number(it.qty)||0),0); }
+function updateTotals(){
+  const total=cartTotal(), base=total/(1+state.business.ivaRate), iva=total-base;
+  const received=parseFloat(document.getElementById("cashReceived").value)||0;
+  document.getElementById("subtotal").textContent=euro(base);
+  document.getElementById("iva").textContent=euro(iva);
+  document.getElementById("total").textContent=euro(total);
+  document.getElementById("changeDue").textContent=euro(Math.max(0,received-total));
+}
+function changeQty(idx,delta){
+  const item=cart[idx]; const newQty=Math.max(item.unit==="kg"?0.001:1,Number(item.qty)+delta);
+  if(item.stockEnabled){
+    const p=state.products.find(x=>x.id===item.productId);
+    if(p && newQty > parseFloat(p.stock||0)){ alert("No hay stock suficiente."); return; }
+  }
+  item.qty = item.unit==="ud" ? Math.round(newQty) : newQty; renderCart();
+}
+function setQty(idx,value){
+  const item=cart[idx]; let qty=parseFloat(value);
+  if(isNaN(qty)||qty<=0){ alert("Cantidad incorrecta."); renderCart(); return; }
+  if(item.unit==="ud") qty=Math.max(1,Math.round(qty));
+  if(item.stockEnabled){ const p=state.products.find(x=>x.id===item.productId); if(p && qty>parseFloat(p.stock||0)){ alert("No hay stock suficiente."); renderCart(); return; } }
+  item.qty=qty; renderCart();
+}
+function removeFromCart(idx){ cart.splice(idx,1); renderCart(); }
+function clearCart(){ cart=[]; document.getElementById("cashReceived").value=""; document.getElementById("ticketNote").value=""; renderCart(); }
+function completeSale(){
+  if(!currentCashier){ showPinScreen(); return; }
+  if(!cart.length){ alert("El ticket está vacío."); return; }
+  const total=cartTotal(), payment=document.getElementById("paymentMethod").value, received=parseFloat(document.getElementById("cashReceived").value)||0;
+  if(payment==="Efectivo" && received<total){ if(!confirm("El efectivo recibido es menor que el total. ¿Cobrar igualmente?")) return; }
+  for(const it of cart){
+    const p=state.products.find(x=>x.id===it.productId);
+    if(p && p.stockEnabled && Number(it.qty)>parseFloat(p.stock||0)){ alert("No hay stock suficiente de: "+it.name); return; }
+  }
+  const base=total/(1+state.business.ivaRate);
+  const invoiceNumber = nextInvoiceNumber();
+  const sale={id:Date.now().toString(), invoiceNumber, date:new Date().toISOString(), displayDate:nowText(), cashier:currentCashier.name,
+    items:JSON.parse(JSON.stringify(cart)), total, base, iva:total-base, payment, received, change:Math.max(0,received-total),
+    note:document.getElementById("ticketNote").value.trim(), status:"active", refundedAmount:0
+  };
+  sale.items.forEach(it=>{ const p=state.products.find(x=>x.id===it.productId); if(p && p.stockEnabled) p.stock = roundStock((parseFloat(p.stock)||0)-Number(it.qty)); });
+  state.sales.push(sale); save();
+  lastReceiptText=buildReceipt(sale);
+  document.getElementById("lastReceipt").style.display="block"; document.getElementById("lastReceipt").textContent=lastReceiptText;
+  setPrintArea(lastReceiptText); clearCart(); renderAll(); renderCashCount();
+  alert("Venta cobrada correctamente. Ticket " + invoiceNumber);
+}
+function nextInvoiceNumber(){
+  const n=state.business.nextNumber || 1; const serie=state.business.serie || "FS";
+  state.business.nextNumber = n + 1; return serie + "-" + String(n).padStart(6,"0");
+}
+function roundStock(v){ return Math.max(0, Math.round(v*1000)/1000).toString(); }
+function buildReceipt(sale){
+  const lines=[]; lines.push(center(state.business.name.toUpperCase(),40)); lines.push(center("NIF "+state.business.nif,40)); lines.push(center(state.business.address,40));
+  lines.push("-".repeat(40)); lines.push("FACTURA SIMPLIFICADA: "+sale.invoiceNumber); lines.push("Fecha: "+sale.displayDate); lines.push("Cajero: "+sale.cashier);
+  if(sale.status==="cancelled") lines.push("ESTADO: ANULADO");
+  if(sale.refundedAmount>0) lines.push("DEVOLUCIONES: "+euro(sale.refundedAmount));
+  lines.push("-".repeat(40));
+  sale.items.forEach(it=>{ lines.push(it.name.substring(0,40)); const qty=it.unit==="kg"?number3(it.qty)+" kg":number2(it.qty)+" ud"; lines.push(`${qty} x ${number2(it.price)} €`.padEnd(27)+euro(it.qty*it.price).padStart(13)); });
+  lines.push("-".repeat(40)); lines.push("Base:".padEnd(27)+euro(sale.base).padStart(13)); lines.push(("IVA incl. "+(state.business.ivaRate*100).toFixed(0)+"%:").padEnd(27)+euro(sale.iva).padStart(13));
+  lines.push("TOTAL:".padEnd(27)+euro(sale.total).padStart(13)); lines.push("Pago: "+sale.payment);
+  if(sale.payment==="Efectivo"){ lines.push("Recibido:".padEnd(27)+euro(sale.received).padStart(13)); lines.push("Cambio:".padEnd(27)+euro(sale.change).padStart(13)); }
+  if(sale.note) lines.push("Nota: "+sale.note); lines.push("-".repeat(40)); lines.push(center("Gracias por su compra",40)); return lines.join("\n");
+}
+function buildReturnReceipt(ret){
+  const sale = state.sales.find(s=>s.id===ret.saleId);
+  const lines=[];
+  lines.push(center(state.business.name.toUpperCase(),40));
+  lines.push(center(ret.type==="cancel" ? "ANULACION DE TICKET" : "DEVOLUCION",40));
+  lines.push("Fecha: "+ret.displayDate);
+  lines.push("Ticket origen: "+(sale ? sale.invoiceNumber : ret.saleId));
+  lines.push("Cajero: "+ret.cashier);
+  lines.push("-".repeat(40));
+  ret.items.forEach(it=>{
+    lines.push(it.name.substring(0,40));
+    const qty=it.unit==="kg"?number3(it.qty)+" kg":number2(it.qty)+" ud";
+    lines.push(`${qty} x ${number2(it.price)} €`.padEnd(27)+("-"+euro(it.qty*it.price)).padStart(13));
+  });
+  lines.push("-".repeat(40));
+  lines.push("TOTAL DEVUELTO:".padEnd(27)+("-"+euro(ret.total)).padStart(13));
+  lines.push("Forma: "+ret.payment);
+  lines.push("Motivo: "+ret.reason);
+  lines.push("-".repeat(40));
+  return lines.join("\n");
+}
+function printCurrentTicket(){
+  if(cart.length){ const total=cartTotal(),base=total/(1+state.business.ivaRate); setPrintArea(buildReceipt({invoiceNumber:"PREVIEW",displayDate:nowText(),cashier:currentCashier?currentCashier.name:"—",items:cart,total,base,iva:total-base,payment:document.getElementById("paymentMethod").value,received:parseFloat(document.getElementById("cashReceived").value)||0,change:Math.max(0,(parseFloat(document.getElementById("cashReceived").value)||0)-total),note:document.getElementById("ticketNote").value.trim(),status:"active",refundedAmount:0})); }
+  else if(lastReceiptText) setPrintArea(lastReceiptText); else { alert("No hay ticket para imprimir."); return; }
+  window.print();
+}
+function openQuickProduct(){ document.getElementById("quickModal").classList.add("open"); document.getElementById("quickName").focus(); }
+function closeQuickProduct(){ document.getElementById("quickModal").classList.remove("open"); ["quickName","quickPrice"].forEach(id=>document.getElementById(id).value=""); document.getElementById("quickUnit").value="ud"; }
+function addQuickToCart(){
+  const name=document.getElementById("quickName").value.trim(), price=parseFloat(document.getElementById("quickPrice").value), unit=document.getElementById("quickUnit").value;
+  if(!name||isNaN(price)||price<0){ alert("Pon nombre y precio correcto."); return; }
+  const p={id:crypto.randomUUID(),name,price,category:"Producto rápido",unit,stockEnabled:false}; closeQuickProduct(); unit==="kg"?openWeightModal(p):addToCart(p,1);
+}
+
+function clearHistoryFilters(){ document.getElementById("historySearch").value=""; document.getElementById("historyDate").value=""; renderHistory(); }
+function saleNetTotal(sale){ return sale.status==="cancelled" ? 0 : Math.max(0, sale.total - (sale.refundedAmount||0)); }
+function renderHistory(){
+  const box=document.getElementById("historyBox");
+  const q=(document.getElementById("historySearch").value||"").toLowerCase().trim();
+  const date=document.getElementById("historyDate").value;
+  let rows=[...state.sales].reverse().filter(s=>{
+    const hay=[s.invoiceNumber,s.displayDate,s.cashier,s.payment,s.status,...s.items.map(i=>i.name)].join(" ").toLowerCase();
+    const okQ=!q || hay.includes(q);
+    const okD=!date || s.date.slice(0,10)===date;
+    return okQ && okD;
+  });
+  if(!rows.length){ box.innerHTML=`<div class="empty">No hay tickets con esos filtros.</div>`; return; }
+  box.innerHTML=`
+    <div style="overflow:auto">
+      <table>
+        <thead><tr><th>Fecha</th><th>Nº</th><th>Cajero</th><th>Pago</th><th>Total</th><th>Devuelto</th><th>Estado</th><th>Acciones</th></tr></thead>
+        <tbody>
+          ${rows.map(s=>`
+            <tr>
+              <td>${escapeHtml(s.displayDate)}</td>
+              <td><b>${escapeHtml(s.invoiceNumber||s.id)}</b></td>
+              <td>${escapeHtml(s.cashier||"—")}</td>
+              <td>${escapeHtml(s.payment)}</td>
+              <td>${euro(saleNetTotal(s))}</td>
+              <td>${euro(s.refundedAmount||0)}</td>
+              <td>${statusHtml(s)}</td>
+              <td>
+                <button class="ghost" onclick="viewSale('${s.id}')">Ver</button>
+                <button class="blue" onclick="reprintSale('${s.id}')">Reimprimir</button>
+                <button class="warning" onclick="openRefundModal('${s.id}')" ${s.status==="cancelled" ? "disabled" : ""}>Devolver</button>
+              </td>
+            </tr>`).join("")}
+        </tbody>
+      </table>
+    </div>`;
+}
+function statusHtml(s){
+  if(s.status==="cancelled") return `<span class="status cancel">Anulado</span>`;
+  if((s.refundedAmount||0)>0) return `<span class="status refund">Dev. parcial</span>`;
+  return `<span class="status ok">Activo</span>`;
+}
+function viewSale(id){
+  const s=state.sales.find(x=>x.id===id); if(!s) return;
+  const returns = state.returns.filter(r=>r.saleId===id);
+  let msg = buildReceipt(s);
+  if(returns.length){
+    msg += "\n\n--- DEVOLUCIONES / ANULACIONES ---\n";
+    returns.forEach(r=>{ msg += `\n${r.displayDate} · ${r.type==="cancel"?"ANULACION":"DEVOLUCION"} · ${euro(r.total)} · ${r.reason}`; });
+  }
+  document.getElementById("lastReceipt").style.display="block";
+  document.getElementById("lastReceipt").textContent=msg;
+}
+function reprintSale(id){
+  const s=state.sales.find(x=>x.id===id); if(!s) return;
+  setPrintArea(buildReceipt(s));
+  window.print();
+}
+function openRefundModal(id){
+  const s=state.sales.find(x=>x.id===id); if(!s) return;
+  refundSaleId=id;
+  document.getElementById("refundTicketInfo").textContent = `Ticket ${s.invoiceNumber} · ${s.displayDate} · Total ${euro(s.total)} · Devuelto ${euro(s.refundedAmount||0)}`;
+  document.getElementById("refundPayment").value = s.payment;
+  document.getElementById("refundReason").value = "";
+  document.getElementById("refundItems").innerHTML = `
+    <table>
+      <thead><tr><th>Producto</th><th>Vendido</th><th>Devolver</th></tr></thead>
+      <tbody>
+        ${s.items.map((it,idx)=>`
+          <tr>
+            <td>${escapeHtml(it.name)}<br><small class="muted">${euro(it.price)} · ${it.unit}</small></td>
+            <td>${it.unit==="kg"?number3(it.qty)+" kg":number2(it.qty)+" ud"}</td>
+            <td><input id="refundQty_${idx}" type="number" step="${it.unit==="kg"?"0.001":"1"}" min="0" max="${it.qty}" value="0"></td>
+          </tr>`).join("")}
+      </tbody>
+    </table>`;
+  document.getElementById("refundModal").classList.add("open");
+}
+function closeRefundModal(){ refundSaleId=null; document.getElementById("refundModal").classList.remove("open"); }
+function confirmPartialRefund(){
+  const sale=state.sales.find(s=>s.id===refundSaleId); if(!sale) return;
+  const reason=document.getElementById("refundReason").value.trim();
+  if(!reason){ alert("El motivo es obligatorio."); return; }
+  const items=[];
+  sale.items.forEach((it,idx)=>{
+    let qty=parseFloat(document.getElementById("refundQty_"+idx).value)||0;
+    if(it.unit==="ud") qty=Math.round(qty);
+    if(qty<0) qty=0;
+    if(qty>Number(it.qty)) qty=Number(it.qty);
+    if(qty>0) items.push({...it, qty});
+  });
+  if(!items.length){ alert("Pon cantidad a devolver."); return; }
+  const total=items.reduce((s,it)=>s+it.qty*it.price,0);
+  if((sale.refundedAmount||0)+total > sale.total + 0.001){ alert("La devolución supera el total del ticket."); return; }
+  const ret={id:Date.now().toString(), saleId:sale.id, type:"partial", date:new Date().toISOString(), displayDate:nowText(), cashier:currentCashier?currentCashier.name:"—", payment:document.getElementById("refundPayment").value, reason, items, total};
+  state.returns.push(ret);
+  sale.refundedAmount = roundMoney((sale.refundedAmount||0)+total);
+  restoreStock(items);
+  save(); closeRefundModal(); renderHistory(); renderXReport(); renderCashCount(); renderProducts(); renderProductTable();
+  lastReceiptText = buildReturnReceipt(ret);
+  document.getElementById("lastReceipt").style.display="block";
+  document.getElementById("lastReceipt").textContent=lastReceiptText;
+  setPrintArea(lastReceiptText);
+  alert("Devolución registrada.");
+}
+function cancelFullTicketFromModal(){
+  const sale=state.sales.find(s=>s.id===refundSaleId); if(!sale) return;
+  const reason=document.getElementById("refundReason").value.trim();
+  if(!reason){ alert("El motivo es obligatorio."); return; }
+  if(sale.status==="cancelled"){ alert("Este ticket ya está anulado."); return; }
+  if(!confirm("¿Anular ticket completo? Quedará registrado y se repondrá stock.")) return;
+  const totalToCancel = Math.max(0, sale.total - (sale.refundedAmount||0));
+  const ret={id:Date.now().toString(), saleId:sale.id, type:"cancel", date:new Date().toISOString(), displayDate:nowText(), cashier:currentCashier?currentCashier.name:"—", payment:document.getElementById("refundPayment").value, reason, items:JSON.parse(JSON.stringify(sale.items)), total:totalToCancel};
+  state.returns.push(ret);
+  sale.status="cancelled";
+  sale.refundedAmount = sale.total;
+  restoreStock(sale.items);
+  save(); closeRefundModal(); renderHistory(); renderXReport(); renderCashCount(); renderProducts(); renderProductTable();
+  lastReceiptText=buildReturnReceipt(ret);
+  document.getElementById("lastReceipt").style.display="block";
+  document.getElementById("lastReceipt").textContent=lastReceiptText;
+  setPrintArea(lastReceiptText);
+  alert("Ticket anulado.");
+}
+function restoreStock(items){
+  items.forEach(it=>{
+    const p=state.products.find(x=>x.id===it.productId);
+    if(p && p.stockEnabled) p.stock = roundStock((parseFloat(p.stock)||0)+Number(it.qty));
+  });
+}
+function roundMoney(v){ return Math.round(v*100)/100; }
+
+function activeSalesSinceLastZ(){
+  if(!state.zClosures.length) return state.sales;
+  const last=state.zClosures[state.zClosures.length-1].closedAt;
+  return state.sales.filter(s=>s.date>last);
+}
+function returnsSinceLastZ(){
+  if(!state.zClosures.length) return state.returns;
+  const last=state.zClosures[state.zClosures.length-1].closedAt;
+  return state.returns.filter(r=>r.date>last);
+}
+function reportData(){
+  const sales=activeSalesSinceLastZ();
+  const returns=returnsSinceLastZ();
+  const byPayment={}, byProduct={}, byCategory={}, byCashier={}, refundsByPayment={};
+  let gross=0, refunds=0;
+  sales.forEach(s=>{
+    if(s.status!=="cancelled") gross += s.total;
+    byPayment[s.payment]=(byPayment[s.payment]||0)+(s.status==="cancelled"?0:s.total);
+    byCashier[s.cashier||"—"]=(byCashier[s.cashier||"—"]||0)+(s.status==="cancelled"?0:s.total);
+    if(s.status!=="cancelled"){
+      s.items.forEach(it=>{
+        const k=it.name,cat=it.category||"Sin categoría";
+        if(!byProduct[k]) byProduct[k]={qty:0,total:0,unit:it.unit||"ud"};
+        byProduct[k].qty+=Number(it.qty)||0;
+        byProduct[k].total+=(Number(it.qty)||0)*(Number(it.price)||0);
+        byCategory[cat]=(byCategory[cat]||0)+(Number(it.qty)||0)*(Number(it.price)||0);
+      });
+    }
+  });
+  returns.forEach(r=>{
+    refunds += r.total;
+    refundsByPayment[r.payment]=(refundsByPayment[r.payment]||0)+r.total;
+  });
+  return {sales,returns,count:sales.filter(s=>s.status!=="cancelled").length,cancelled:sales.filter(s=>s.status==="cancelled").length,gross,refunds,net:gross-refunds,byPayment,byProduct,byCategory,byCashier,refundsByPayment};
+}
+function renderXReport(){
+  const data=reportData();
+  const rows=(obj)=>Object.entries(obj).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<tr><td>${escapeHtml(k)}</td><td>${euro(v)}</td></tr>`).join("")||`<tr><td colspan="2">Sin datos</td></tr>`;
+  const productRows=Object.entries(data.byProduct).sort((a,b)=>b[1].total-a[1].total).map(([k,v])=>`<tr><td>${escapeHtml(k)}</td><td>${v.unit==="kg"?number3(v.qty)+" kg":number2(v.qty)+" ud"}</td><td>${euro(v.total)}</td></tr>`).join("")||`<tr><td colspan="3">Sin ventas</td></tr>`;
+  document.getElementById("reportBox").innerHTML=`
+    <div class="stat-grid">
+      <div class="stat"><span>Ventas brutas</span><strong>${euro(data.gross)}</strong></div>
+      <div class="stat"><span>Devoluciones/anulaciones</span><strong>${euro(data.refunds)}</strong></div>
+      <div class="stat"><span>Neto caja abierta</span><strong>${euro(data.net)}</strong></div>
+      <div class="stat"><span>Tickets activos</span><strong>${data.count}</strong></div>
+      <div class="stat"><span>Tickets anulados</span><strong>${data.cancelled}</strong></div>
+      <div class="stat"><span>Último cierre Z</span><strong>${state.zClosures.length?state.zClosures[state.zClosures.length-1].displayDate:"Sin cierre"}</strong></div>
+    </div>
+    <h3>Ventas por forma de pago</h3><table><tbody>${rows(data.byPayment)}</tbody></table>
+    <h3>Devoluciones por forma de pago</h3><table><tbody>${rows(data.refundsByPayment)}</tbody></table>
+    <h3>Cajeros</h3><table><tbody>${rows(data.byCashier)}</tbody></table>
+    <h3>Categorías</h3><table><tbody>${rows(data.byCategory)}</tbody></table>
+    <h3>Productos vendidos</h3><table><thead><tr><th>Producto</th><th>Cantidad</th><th>Total</th></tr></thead><tbody>${productRows}</tbody></table>`;
+  lastReportText=buildReportText("INFORME X",data);
+}
+function closeZ(){
+  const data=reportData();
+  if(!data.sales.length && !data.returns.length){ alert("No hay movimientos nuevos para cerrar."); return; }
+  renderCashCount();
+  if(!confirm("¿Cerrar caja Z? Quedará guardado y empezará una caja nueva.")) return;
+  const closure={id:Date.now().toString(),closedAt:new Date().toISOString(),displayDate:nowText(),cashier:currentCashier?currentCashier.name:"—",...data,cashSession:JSON.parse(JSON.stringify(state.cashSession))};
+  state.zClosures.push(closure);
+  state.cashSession={openingCash:0, openingNote:"", openingAt:null, countedCash:null, closeNote:"", countedAt:null};
+  save(); renderCashInputs(); renderXReport(); renderCashCount();
+  lastReportText=buildReportText("CIERRE Z",closure);
+  setPrintArea(lastReportText);
+  alert("Cierre Z realizado.");
+}
+function buildReportText(title,data){
+  const lines=[]; lines.push(center(state.business.name.toUpperCase(),40)); lines.push(center(title,40)); lines.push("Fecha: "+nowText()); lines.push("Cajero: "+(currentCashier?currentCashier.name:"—")); lines.push("-".repeat(40));
+  lines.push("Ventas brutas: "+euro(data.gross)); lines.push("Devoluciones: "+euro(data.refunds)); lines.push("NETO: "+euro(data.net)); lines.push("Tickets activos: "+data.count); lines.push("Tickets anulados: "+data.cancelled); lines.push("-".repeat(40));
+  const addObj=(name,obj)=>{ lines.push(name); Object.entries(obj||{}).sort((a,b)=>b[1]-a[1]).forEach(([k,v])=>lines.push(k.substring(0,26).padEnd(27)+euro(v).padStart(13))); lines.push("-".repeat(40)); };
+  addObj("VENTAS POR PAGO",data.byPayment); addObj("DEVOLUCIONES POR PAGO",data.refundsByPayment); addObj("CAJEROS",data.byCashier); addObj("CATEGORIAS",data.byCategory);
+  const cash = cashSummary();
+  lines.push("ARQUEO");
+  lines.push("Fondo inicial: ".padEnd(27)+euro(cash.opening).padStart(13));
+  lines.push("Efectivo ventas: ".padEnd(27)+euro(cash.cashSales).padStart(13));
+  lines.push("Devol. efectivo: ".padEnd(27)+euro(cash.cashReturns).padStart(13));
+  lines.push("Esperado caja: ".padEnd(27)+euro(cash.expectedCash).padStart(13));
+  lines.push("Contado caja: ".padEnd(27)+euro(cash.counted).padStart(13));
+  lines.push("Diferencia: ".padEnd(27)+euro(cash.diff).padStart(13));
+  return lines.join("\n");
+}
+function printReport(){ if(!lastReportText) renderXReport(); setPrintArea(lastReportText||"Sin informe."); window.print(); }
+
+function cashSummary(){
+  const data=reportData();
+  const opening=parseFloat(state.cashSession.openingCash)||0;
+  const counted=parseFloat(state.cashSession.countedCash)||0;
+  const cashSales=data.byPayment["Efectivo"]||0;
+  const cashReturns=data.refundsByPayment["Efectivo"]||0;
+  const expectedCash=opening+cashSales-cashReturns;
+  return {opening,counted,cashSales,cashReturns,expectedCash,diff:counted-expectedCash,data};
+}
+function renderCashInputs(){
+  document.getElementById("openingCash").value = state.cashSession.openingCash ?? 0;
+  document.getElementById("openingNote").value = state.cashSession.openingNote || "";
+  document.getElementById("countedCash").value = state.cashSession.countedCash ?? "";
+  document.getElementById("cashCloseNote").value = state.cashSession.closeNote || "";
+}
+function saveOpeningCash(){
+  state.cashSession.openingCash = parseFloat(document.getElementById("openingCash").value)||0;
+  state.cashSession.openingNote = document.getElementById("openingNote").value.trim();
+  state.cashSession.openingAt = state.cashSession.openingAt || new Date().toISOString();
+  save(); renderCashCount(); alert("Apertura guardada.");
+}
+function saveCashCount(){
+  state.cashSession.countedCash = parseFloat(document.getElementById("countedCash").value)||0;
+  state.cashSession.closeNote = document.getElementById("cashCloseNote").value.trim();
+  state.cashSession.countedAt = new Date().toISOString();
+  save(); renderCashCount(); alert("Arqueo guardado.");
+}
+function renderCashCount(){
+  const c=cashSummary();
+  document.getElementById("cashBox").innerHTML=`
+    <div class="stat-grid">
+      <div class="stat"><span>Fondo inicial</span><strong>${euro(c.opening)}</strong></div>
+      <div class="stat"><span>Ventas efectivo</span><strong>${euro(c.cashSales)}</strong></div>
+      <div class="stat"><span>Devoluciones efectivo</span><strong>${euro(c.cashReturns)}</strong></div>
+      <div class="stat"><span>Efectivo esperado</span><strong>${euro(c.expectedCash)}</strong></div>
+      <div class="stat"><span>Efectivo contado</span><strong>${euro(c.counted)}</strong></div>
+      <div class="stat"><span>Diferencia</span><strong style="color:${c.diff<0?'#b91c1c':c.diff>0?'#b45309':'#15803d'}">${euro(c.diff)}</strong></div>
+    </div>
+    <h3>Resumen caja abierta</h3>
+    <table>
+      <tbody>
+        <tr><td>Ventas brutas</td><td>${euro(c.data.gross)}</td></tr>
+        <tr><td>Devoluciones/anulaciones</td><td>${euro(c.data.refunds)}</td></tr>
+        <tr><td>Neto</td><td><b>${euro(c.data.net)}</b></td></tr>
+        <tr><td>Apertura</td><td>${state.cashSession.openingAt ? new Date(state.cashSession.openingAt).toLocaleString("es-ES") : "Sin guardar"}</td></tr>
+        <tr><td>Observación apertura</td><td>${escapeHtml(state.cashSession.openingNote||"")}</td></tr>
+        <tr><td>Observación cierre</td><td>${escapeHtml(state.cashSession.closeNote||"")}</td></tr>
+      </tbody>
+    </table>`;
+}
+
+function saveBusinessSettings(){
+  state.business.name=document.getElementById("setName").value.trim()||"Pastelería Ortega";
+  state.business.nif=document.getElementById("setNif").value.trim()||"Z0223015N";
+  state.business.address=document.getElementById("setAddress").value.trim()||"Bda. Juan XXIII, 10, Bajo, 09007 Burgos";
+  state.business.ivaRate=(parseFloat(document.getElementById("setIva").value)||10)/100;
+  save(); renderBusiness(); updateTotals(); alert("Datos guardados.");
+}
+function saveNumbering(){ state.business.serie=document.getElementById("setSerie").value.trim()||"FS"; state.business.nextNumber=Math.max(1,parseInt(document.getElementById("setNextNumber").value)||1); save(); alert("Numeración guardada."); }
+function loadLogoFile(e){
+  const file=e.target.files[0]; if(!file) return;
+  const reader=new FileReader(); reader.onload=()=>{ state.business.logo=reader.result; save(); renderBusiness(); }; reader.readAsDataURL(file);
+}
+function removeLogo(){ state.business.logo=""; save(); renderBusiness(); }
+function addCashier(){
+  const name=document.getElementById("newCashierName").value.trim(), pin=document.getElementById("newCashierPin").value.trim()||"1234";
+  if(!name){ alert("Pon nombre del cajero."); return; }
+  state.cashiers.push({id:crypto.randomUUID(),name,pin,role:"cashier"});
+  document.getElementById("newCashierName").value=""; document.getElementById("newCashierPin").value="";
+  save(); renderLogin(); alert("Cajero añadido.");
+}
+function renderCashierList(){
+  const box=document.getElementById("cashierList"); if(!box) return;
+  box.innerHTML=state.cashiers.map(c=>`<div class="row" style="border-bottom:1px solid var(--line);padding:6px 0"><span>${escapeHtml(c.name)} <small class="muted">PIN ${escapeHtml(c.pin)}</small></span><button class="danger" onclick="deleteCashier('${c.id}')">Borrar</button></div>`).join("");
+}
+function deleteCashier(id){ if(state.cashiers.length<=1){alert("Debe quedar al menos un cajero.");return;} if(!confirm("¿Borrar cajero?"))return; state.cashiers=state.cashiers.filter(c=>c.id!==id); save(); renderLogin(); }
+function exportBackup(){
+  const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="backup_tpv_pasteleria_ortega_pro_plus.json"; a.click(); URL.revokeObjectURL(a.href);
+}
+function importBackup(){
+  const file=document.getElementById("backupFile").files[0]; if(!file){alert("Selecciona un archivo backup JSON.");return;}
+  const reader=new FileReader(); reader.onload=()=>{ try{ const data=migrateState(JSON.parse(reader.result)); if(!data.products||!data.business) throw new Error("Backup no válido"); if(!confirm("¿Importar backup y sustituir datos actuales?")) return; state=data; save(); load(); alert("Backup importado."); }catch(e){alert("Archivo no válido.");} }; reader.readAsText(file);
+}
+function exportCSV(){
+  if(!state.sales.length && !state.returns.length){ alert("No hay movimientos para exportar."); return; }
+  const rows=[["tipo","fecha","factura_simplificada","cajero","ticket_id","producto","categoria","unidad","cantidad","precio","total_linea","forma_pago","estado","motivo"]];
+  state.sales.forEach(s=>s.items.forEach(it=>rows.push(["VENTA",s.displayDate,s.invoiceNumber||"",s.cashier||"",s.id,it.name,it.category||"",it.unit||"ud",it.qty,it.price,((+it.qty||0)*(+it.price||0)).toFixed(2),s.payment,s.status||"active",""])));
+  state.returns.forEach(r=>r.items.forEach(it=>rows.push([r.type==="cancel"?"ANULACION":"DEVOLUCION",r.displayDate,"",r.cashier||"",r.saleId,it.name,it.category||"",it.unit||"ud",-Math.abs(it.qty),it.price,(-Math.abs((+it.qty||0)*(+it.price||0))).toFixed(2),r.payment,r.type,r.reason||""])));
+  const csv=rows.map(r=>r.map(x=>`"${String(x).replaceAll('"','""')}"`).join(";")).join("\n");
+  const blob=new Blob([csv],{type:"text/csv;charset=utf-8"}); const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="movimientos_pasteleria_ortega.csv"; a.click(); URL.revokeObjectURL(a.href);
+}
+function resetAllData(){ if(!confirm("Esto borrará todo el TPV guardado en este navegador. ¿Seguro?")) return; localStorage.removeItem(STORE_KEY); load(); }
+function setPrintArea(text){ document.getElementById("printArea").innerHTML=`<pre>${escapeHtml(text)}</pre>`; }
+function scrollCart(){ document.getElementById("cartPanel").scrollIntoView({behavior:"smooth",block:"start"}); }
+function scrollTop(){ window.scrollTo({top:0,behavior:"smooth"}); }
+function euro(n){ return (Number(n)||0).toLocaleString("es-ES",{style:"currency",currency:"EUR"}); }
+function number2(n){ return (Number(n)||0).toLocaleString("es-ES",{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function number3(n){ return (Number(n)||0).toLocaleString("es-ES",{minimumFractionDigits:3,maximumFractionDigits:3}); }
+function nowText(){ return new Date().toLocaleString("es-ES"); }
+function center(text,width){ text=String(text); if(text.length>=width)return text; return " ".repeat(Math.floor((width-text.length)/2))+text; }
+function escapeHtml(str){ return String(str).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])); }
+function escapeAttr(str){ return escapeHtml(str).replace(/"/g,"&quot;"); }
+function escapeJs(str){ return String(str).replace(/\\/g,"\\\\").replace(/'/g,"\\'").replace(/\n/g,""); }
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"){ closeWeightModal(); closeQuickProduct(); closeRefundModal(); }
+  if(e.key==="Enter" && document.getElementById("weightModal").classList.contains("open")) confirmWeight();
+  if(e.key==="Enter" && document.getElementById("pinScreen").style.display==="flex") login();
+});
+load();
+</script>
+</body>
+</html>
